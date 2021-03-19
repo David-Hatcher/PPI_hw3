@@ -3,25 +3,33 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <tomcrypt.h>
 
 using namespace std;
 
 /*read a single line from a file*/
-string getFileConts(string fileName){
-    string line;
+vector<string> getFileConts(string fileName){
+    vector<string> messages;
     ifstream file;
     file.open(fileName);
-    getline(file,line);
+    if(file.is_open()){
+        string s;
+        while(getline(file,s)){
+            messages.push_back(s);
+        }
+    }
     file.close();
-    return line;
+    return messages;
 }
 
 /*write a single string to a text file*/
-void writeToFile(string fileName, unsigned char text[]){
-    ofstream file(fileName);
-    file << text;
-    file.close();
+void writeToFile(string fileName, vector<string> msg){
+    ofstream file;
+    file.open(fileName);
+    for(string m : msg){
+        file << m << endl;
+    }
 }
 
 unsigned char* ctr_encrypt(unsigned char *buffer, unsigned char *key,int len)
